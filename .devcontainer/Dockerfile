@@ -11,3 +11,5 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 USER vscode
 RUN curl -fsSL https://deno.land/install.sh | sh
 RUN fish -c "set -U DENO_INSTALL /home/vscode/.deno; fish_add_path $DENO_INSTALL/bin"
+RUN rustup target add wasm32-unknown-unknown
+RUN cargo install wasm-gc
