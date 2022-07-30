@@ -25,7 +25,8 @@
 	},
 	"extensions": [
 		"denoland.vscode-deno",
-		"rust-lang.rust-analyzer"
+		"rust-lang.rust-analyzer",
+		"bungcip.better-toml"
 	],
 	"postCreateCommand": "sh postcreate.sh"
 }

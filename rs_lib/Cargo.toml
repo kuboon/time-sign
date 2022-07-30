@@ -14,3 +14,5 @@ opt-level = "z"
 
 [dependencies]
 wasm-bindgen = "=0.2.81"
+ibe = {version = "0.2.2", features = ["kv1"]}
+rand = "0.8.4"
