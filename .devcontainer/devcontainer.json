@@ -21,11 +21,11 @@
 		"git": "latest",
 		"github-cli": "latest",
 		"sshd": "latest",
-		"fish": "latest",
-		"rust": "1.55"
+		"fish": "latest"
 	},
 	"extensions": [
 		"denoland.vscode-deno",
 		"rust-lang.rust-analyzer"
-	]
+	],
+	"postCreateCommand": "sh postcreate.sh"
 }

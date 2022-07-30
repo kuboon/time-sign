@@ -1,5 +1,5 @@
 {
   "tasks": {
-    "build": "cd ibe-wasm; cargo build --target wasm32-unknown-unknown; wasm-gc target/wasm32-unknown-unknown/debug/ibe_wasm.wasm"
+    "wasmbuild": "deno run -A https://deno.land/x/wasmbuild@0.8.5/main.ts"
   }
 }

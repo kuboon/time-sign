@@ -5,11 +5,11 @@ ARG VARIANT="jammy"
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
 # [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends build-essential
 
 USER vscode
 RUN curl -fsSL https://deno.land/install.sh | sh
-RUN fish -c "set -U DENO_INSTALL /home/vscode/.deno; fish_add_path $DENO_INSTALL/bin"
-RUN rustup target add wasm32-unknown-unknown
-RUN cargo install wasm-gc
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+# RUN rustup target add wasm32-unknown-unknown
+# RUN cargo install wasm-gc
