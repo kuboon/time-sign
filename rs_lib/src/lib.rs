@@ -6,41 +6,42 @@ use js_sys::Uint8Array;
 use wasm_bindgen::prelude::*;
 
 trait JsBind: Compress {
+  fn to_base64(&self) -> String {
+    base64::encode(self.to_bytes().as_ref())
+  }
+  fn from_base64(s: &str) -> Self {
+    let vec = base64::decode(s).unwrap();
+    let ct_option = Self::from_bytes(&Self::try_into(vec));
+    ct_option.unwrap()
+  }
   fn to_js(&self) -> Uint8Array {
     Uint8Array::from(self.to_bytes().as_ref())
   }
   fn from_js(key: Uint8Array) -> Self {
-    Self::from_bytes(&Self::output(key)).unwrap()
+    Self::from_bytes(&Self::try_into(key.to_vec())).unwrap()
   }
-  fn output(key: Uint8Array) -> Self::Output;
+  fn try_into(vec: Vec<u8>) -> Self::Output;
 }
-
-impl JsBind for PublicKey {
-  fn output(key: Uint8Array) -> Self::Output {
-    key.to_vec().try_into().unwrap()
-  }
-}
-impl JsBind for SecretKey {
-  fn output(key: Uint8Array) -> Self::Output {
-    key.to_vec().try_into().unwrap()
-  }
-}
-impl JsBind for UserSecretKey {
-  fn output(key: Uint8Array) -> Self::Output {
-    key.to_vec().try_into().unwrap()
+macro_rules! js_bind {
+  ($i:ident) => {
+    impl JsBind for $i {
+      fn try_into(vec: Vec<u8>) -> Self::Output {
+        vec.try_into().unwrap()
+      }
+    }
+  };
+  ($i:ident, $($j:ident),*) => {
+    js_bind!($i);
+    js_bind!($($j),*);
   }
 }
-impl JsBind for CipherText {
-  fn output(key: Uint8Array) -> Self::Output {
-    key.to_vec().try_into().unwrap()
-  }
-}
+js_bind!(PublicKey, SecretKey, UserSecretKey, CipherText);
 
 #[wasm_bindgen]
-pub fn setup(f: &js_sys::Function) {
+pub fn setup() -> JsValue {
   let mut rng = rand::thread_rng();
   let (pk, sk) = CGWKV::setup(&mut rng);
-  f.call2(&JsValue::null(), &pk.to_js(), &sk.to_js()).unwrap();
+  serde_wasm_bindgen::to_value(&(pk.to_base64(), sk.to_base64())).unwrap()
 }
 
 #[wasm_bindgen]
@@ -53,11 +54,11 @@ pub fn extract_usk(sk_js: Uint8Array, id: &str) -> Uint8Array {
 }
 
 #[wasm_bindgen]
-pub fn encaps(pk_js: Uint8Array, id: &str) -> Uint8Array {
+pub fn encaps(pk_js: Uint8Array, id: &str) -> JsValue {
   let mut rng = rand::thread_rng();
   let kid = <CGWKV as IBKEM>::Id::derive(id.as_bytes());
-  let (ct, _ss) = CGWKV::encaps(&PublicKey::from_js(pk_js), &kid, &mut rng);
-  ct.to_js()
+  let (ct, ss) = CGWKV::encaps(&PublicKey::from_js(pk_js), &kid, &mut rng);
+  serde_wasm_bindgen::to_value(&(ct.to_base64(), base64::encode(ss.0))).unwrap()
 }
 #[wasm_bindgen]
 pub fn decaps(usk_js: Uint8Array, ct_js: Uint8Array) -> Uint8Array {

@@ -1,6 +1,8 @@
 {
   "tasks": {
     "wasmbuild": "deno run -A https://deno.land/x/wasmbuild@0.8.5/main.ts",
+    "genkey": "deno run --allow-read=./lib/rs_lib_bg.wasm --allow-write=secret.json generate_key.ts",
     "run": "deno run --allow-read=./lib/rs_lib_bg.wasm --allow-net=0.0.0.0:8000 main.ts"
-  }
+  },
+  "importMap": "import_map.json"
 }
