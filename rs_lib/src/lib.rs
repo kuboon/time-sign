@@ -45,8 +45,8 @@ pub fn setup() -> JsValue {
 }
 
 #[wasm_bindgen]
-pub fn extract_usk(sk_js: Uint8Array, id: &str) -> Uint8Array {
-  let sk = SecretKey::from_js(sk_js);
+pub fn extract_usk(sk: Uint8Array, id: &str) -> Uint8Array {
+  let sk = SecretKey::from_js(sk);
   let mut rng = rand::thread_rng();
   let kid = <CGWKV as IBKEM>::Id::derive(id.as_bytes());
   let usk = CGWKV::extract_usk(None, &sk, &kid, &mut rng);
@@ -54,18 +54,18 @@ pub fn extract_usk(sk_js: Uint8Array, id: &str) -> Uint8Array {
 }
 
 #[wasm_bindgen]
-pub fn encaps(pk_js: Uint8Array, id: &str) -> JsValue {
+pub fn encaps(pk: Uint8Array, id: &str) -> JsValue {
   let mut rng = rand::thread_rng();
   let kid = <CGWKV as IBKEM>::Id::derive(id.as_bytes());
-  let (ct, ss) = CGWKV::encaps(&PublicKey::from_js(pk_js), &kid, &mut rng);
+  let (ct, ss) = CGWKV::encaps(&PublicKey::from_js(pk), &kid, &mut rng);
   serde_wasm_bindgen::to_value(&(ct.to_base64(), base64::encode(ss.0))).unwrap()
 }
 #[wasm_bindgen]
-pub fn decaps(usk_js: Uint8Array, ct_js: Uint8Array) -> Uint8Array {
+pub fn decaps(usk: Uint8Array, ct: Uint8Array) -> Uint8Array {
   let ss = CGWKV::decaps(
     None,
-    &UserSecretKey::from_js(usk_js),
-    &CipherText::from_js(ct_js),
+    &UserSecretKey::from_js(usk),
+    &CipherText::from_js(ct),
   )
   .unwrap();
   Uint8Array::from(&ss.0 as &[u8])
@@ -79,5 +79,8 @@ mod tests {
   fn it_works() {
     let mut rng = rand::thread_rng();
     let (pk, sk) = CGWKV::setup(&mut rng);
+    encaps(pk.to_js(), "test");
+    let _usk = extract_usk(sk.to_js(), "test");
+    // decaps(usk, ct);
   }
 }

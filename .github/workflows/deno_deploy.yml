@@ -17,11 +17,11 @@ jobs:
         with:
           deno-version: vx.x.x
 
-      - name: wasmbuild
-        run: deno task wasmbuild
+      - name: Check Wasm up-to-date
+        run: deno task wasmbuild --check
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
           project: "time-sign"
-          entrypoint: "./main.ts" # TODO: update entrypoint
+          entrypoint: "./server.ts"
