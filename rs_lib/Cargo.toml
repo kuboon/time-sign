@@ -13,9 +13,9 @@ lto = true
 opt-level = "z"
 
 [dependencies]
-wasm-bindgen = "=0.2.81"
-js-sys = "0.3.58"
-ibe = {version = "0.2.2", features = ["cgwkv"]}
+wasm-bindgen = "0.2.83"
+js-sys = "0.3.60"
+ibe = {version = "0.2.3", features = ["cgwkv"]}
 rand = "0.8.4"
 getrandom = { version = "0.2.7", features = ["js"] }
 irmaseal-curve = { version = "0.1.4", features = [
@@ -23,8 +23,8 @@ irmaseal-curve = { version = "0.1.4", features = [
   "group",
   "pairings"
 ] }
-group = "0.12.0"
+group = "0.13.0"
 serde = "1.0.140"
-base64 = "0.13.0"
+base64 = "0.21.0"
 subtle = "2.4.1"
 serde-wasm-bindgen = "0.4.3"

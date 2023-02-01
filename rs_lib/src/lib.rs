@@ -1,3 +1,4 @@
+use base64::prelude::*;
 use ibe::kem::cgw_kv::*;
 use ibe::kem::IBKEM;
 use ibe::Compress;
@@ -7,10 +8,10 @@ use wasm_bindgen::prelude::*;
 
 trait JsBind: Compress {
   fn to_base64(&self) -> String {
-    base64::encode(self.to_bytes().as_ref())
+    BASE64_STANDARD_NO_PAD.encode(self.to_bytes().as_ref())
   }
   fn from_base64(s: &str) -> Self {
-    let vec = base64::decode(s).unwrap();
+    let vec = BASE64_STANDARD_NO_PAD.decode(s).unwrap();
     let ct_option = Self::from_bytes(&Self::try_into(vec));
     ct_option.unwrap()
   }
@@ -58,7 +59,7 @@ pub fn encaps(pk: Uint8Array, id: &str) -> JsValue {
   let mut rng = rand::thread_rng();
   let kid = <CGWKV as IBKEM>::Id::derive(id.as_bytes());
   let (ct, ss) = CGWKV::encaps(&PublicKey::from_js(pk), &kid, &mut rng);
-  serde_wasm_bindgen::to_value(&(ct.to_base64(), base64::encode(ss.0))).unwrap()
+  serde_wasm_bindgen::to_value(&(ct.to_base64(), BASE64_STANDARD_NO_PAD.encode(ss.0))).unwrap()
 }
 #[wasm_bindgen]
 pub fn decaps(usk: Uint8Array, ct: Uint8Array) -> Uint8Array {
