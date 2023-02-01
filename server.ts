@@ -3,7 +3,7 @@ import { decode } from "std/encoding/base64.ts";
 import { extract_usk, instantiate } from "./lib/rs_lib.generated.js";
 await instantiate();
 
-const pk = decode(Deno.readTextFileSync("master.key"))
+const pk = decode(await Deno.readTextFile("master.key"))
 const sk = decode(Deno.env.get("IBKEM_SECRET_KEY")!)
 const handler: Handler = (req) => {
   const pk_match = new URLPattern({ pathname: "/master_pk" }).exec(req.url);
