@@ -13,7 +13,7 @@ lto = true
 opt-level = "z"
 
 [dependencies]
-wasm-bindgen = "0.2.83"
+wasm-bindgen = "=0.2.83"
 js-sys = "0.3.60"
 ibe = {version = "0.2.3", features = ["cgwkv"]}
 rand = "0.8.4"
