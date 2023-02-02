@@ -1,4 +1,4 @@
-import { instantiate, encaps, decaps } from "./lib/rs_lib.generated.js";
+import { instantiate, encaps, decaps } from "../lib/rs_lib.generated.js";
 import { decode } from "std/encoding/base64.ts";
 import * as msgpack from "https://esm.sh/@msgpack/msgpack@2.7.2";
 await instantiate();

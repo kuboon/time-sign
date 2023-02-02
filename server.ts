@@ -10,7 +10,8 @@ const sk = decode(Deno.env.get("IBKEM_SECRET_KEY")!)
 
 const app = new Hono()
 app.use('/', cors({
-  origin: 'https://*.kbn.one',
+  origin: '*',
+  allowMethods: ['GET']
 }))
 app.get('/master_pk', c => c.body(pk))
 app.get('/at/:at', c => {

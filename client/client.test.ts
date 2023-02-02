@@ -1,6 +1,6 @@
 import { decrypt, encrypt } from "./client.ts";
 import { decode } from "std/encoding/base64.ts";
-import { extract_usk, instantiate } from "./lib/rs_lib.generated.js";
+import { extract_usk, instantiate } from "../lib/rs_lib.generated.js";
 import { assertEquals } from "std/testing/asserts.ts";
 await instantiate();
 Deno.test({
