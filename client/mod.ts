@@ -1,6 +1,6 @@
 import { instantiate, encaps, decaps } from "../lib/rs_lib.generated.js";
-import { decode } from "std/encoding/base64.ts";
-import * as msgpack from "https://esm.sh/@msgpack/msgpack@2.7.2";
+import { decode } from "https://deno.land/std@0.176.0/encoding/base64.ts";
+import * as msgpack from "https://esm.sh/@msgpack/msgpack@2.8.0";
 await instantiate();
 
 export function missingFeature() {
