@@ -1,6 +1,6 @@
-import { Hono } from "jsr:@hono/hono@^4.12.9";
-import { cors } from "jsr:@hono/hono@^4.12.9/cors";
-import { decodeBase64 } from "jsr:@std/encoding@^1.0.10/base64";
+import { Hono } from "@hono/hono";
+import { cors } from "@hono/hono/cors";
+import { decodeBase64 } from "@std/encoding/base64";
 import { extract_usk, instantiate } from "./lib/rs_lib.generated.js";
 await instantiate();
 

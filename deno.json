@@ -4,5 +4,12 @@
     "genkey": "deno run --allow-read=./lib/rs_lib_bg.wasm --allow-write=master.key generate_key.ts",
     "server": "deno run --allow-read=./lib/rs_lib_bg.wasm --allow-net=0.0.0.0:8000 server.ts",
     "build": "deno run -A client/pack.ts"
+  },
+  "imports": {
+    "@hono/hono": "jsr:@hono/hono@^4.12.9",
+    "@luca/esbuild-deno-loader": "jsr:@luca/esbuild-deno-loader@^0.11.1",
+    "@std/assert": "jsr:@std/assert@^1.0.19",
+    "@std/encoding": "jsr:@std/encoding@^1.0.10",
+    "esbuild": "npm:esbuild@^0.27.4"
   }
 }

@@ -1,7 +1,7 @@
 import { decrypt, encrypt } from "./mod.ts";
-import { decodeBase64 } from "jsr:@std/encoding@^1.0.10/base64";
+import { decodeBase64 } from "@std/encoding/base64";
 import { extract_usk, instantiate } from "../lib/rs_lib.generated.js";
-import { assertEquals } from "jsr:@std/assert@^1.0.0/equals";
+import { assertEquals } from "@std/assert/equals";
 await instantiate();
 
 class Server {

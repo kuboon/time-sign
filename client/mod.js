@@ -427,19 +427,17 @@ var H,
 function at(e) {
   for (var t = e.length, n = 0, r = 0; r < t;) {
     var i = e.charCodeAt(r++);
-    if (i & 4294967168) {
-      if (!(i & 4294965248)) n += 2;
-      else {
-        if (i >= 55296 && i <= 56319 && r < t) {
-          var o = e.charCodeAt(r);
-          (o & 64512) === 56320 &&
-            (++r, i = ((i & 1023) << 10) + (o & 1023) + 65536);
-        }
-        i & 4294901760 ? n += 4 : n += 3;
-      }
-    } else {
+    if ((i & 4294967168) === 0) {
       n++;
       continue;
+    } else if ((i & 4294965248) === 0) n += 2;
+    else {
+      if (i >= 55296 && i <= 56319 && r < t) {
+        var o = e.charCodeAt(r);
+        (o & 64512) === 56320 &&
+          (++r, i = ((i & 1023) << 10) + (o & 1023) + 65536);
+      }
+      (i & 4294901760) === 0 ? n += 3 : n += 4;
     }
   }
   return n;
@@ -447,23 +445,21 @@ function at(e) {
 function It(e, t, n) {
   for (var r = e.length, i = n, o = 0; o < r;) {
     var s = e.charCodeAt(o++);
-    if (s & 4294967168) {
-      if (!(s & 4294965248)) t[i++] = s >> 6 & 31 | 192;
-      else {
-        if (s >= 55296 && s <= 56319 && o < r) {
-          var c = e.charCodeAt(o);
-          (c & 64512) === 56320 &&
-            (++o, s = ((s & 1023) << 10) + (c & 1023) + 65536);
-        }
-        s & 4294901760
-          ? (t[i++] = s >> 18 & 7 | 240,
-            t[i++] = s >> 12 & 63 | 128,
-            t[i++] = s >> 6 & 63 | 128)
-          : (t[i++] = s >> 12 & 15 | 224, t[i++] = s >> 6 & 63 | 128);
-      }
-    } else {
+    if ((s & 4294967168) === 0) {
       t[i++] = s;
       continue;
+    } else if ((s & 4294965248) === 0) t[i++] = s >> 6 & 31 | 192;
+    else {
+      if (s >= 55296 && s <= 56319 && o < r) {
+        var c = e.charCodeAt(o);
+        (c & 64512) === 56320 &&
+          (++o, s = ((s & 1023) << 10) + (c & 1023) + 65536);
+      }
+      (s & 4294901760) === 0
+        ? (t[i++] = s >> 12 & 15 | 224, t[i++] = s >> 6 & 63 | 128)
+        : (t[i++] = s >> 18 & 7 | 240,
+          t[i++] = s >> 12 & 63 | 128,
+          t[i++] = s >> 6 & 63 | 128);
     }
     t[i++] = s & 63 | 128;
   }
@@ -486,7 +482,7 @@ var Dt = Y?.encodeInto ? Ct : kt, Mt = 4096;
 function pt(e, t, n) {
   for (var r = t, i = r + n, o = [], s = ""; r < i;) {
     var c = e[r++];
-    if (!(c & 128)) o.push(c);
+    if ((c & 128) === 0) o.push(c);
     else if ((c & 224) === 192) {
       var u = e[r++] & 63;
       o.push((c & 31) << 6 | u);
@@ -518,13 +514,13 @@ function Ot(e, t, n) {
   var r = e.subarray(t, t + n);
   return Ft.decode(r);
 }
-var z = function () {
+var z = (function () {
     function e(t, n) {
       this.type = t, this.data = n;
     }
     return e;
-  }(),
-  jt = function () {
+  })(),
+  jt = (function () {
     var e = function (t, n) {
       return e = Object.setPrototypeOf ||
         { __proto__: [] } instanceof Array && function (r, i) {
@@ -552,8 +548,8 @@ var z = function () {
         ? Object.create(n)
         : (r.prototype = n.prototype, new r());
     };
-  }(),
-  g = function (e) {
+  })(),
+  g = (function (e) {
     jt(t, e);
     function t(n) {
       var r = e.call(this, n) || this, i = Object.create(t.prototype);
@@ -566,7 +562,7 @@ var z = function () {
         r;
     }
     return t;
-  }(Error),
+  })(Error),
   Pt = -1,
   Wt = 4294967296 - 1,
   Kt = 17179869184 - 1;
@@ -632,7 +628,7 @@ function Ht(e) {
   return new Date(t.sec * 1e3 + t.nsec / 1e6);
 }
 var Gt = { type: Pt, encode: Nt, decode: Ht },
-  dt = function () {
+  dt = (function () {
     function e() {
       this.builtInEncoders = [],
         this.builtInDecoders = [],
@@ -677,7 +673,7 @@ var Gt = { type: Pt, encode: Nt, decode: Ht },
       },
       e.defaultCodec = new e(),
       e;
-  }();
+  })();
 function O(e) {
   return e instanceof Uint8Array
     ? e
@@ -694,7 +690,7 @@ function qt(e) {
 }
 var Xt = 100,
   Jt = 2048,
-  Qt = function () {
+  Qt = (function () {
     function e(t, n, r, i, o, s, c, u) {
       t === void 0 && (t = dt.defaultCodec),
         n === void 0 && (n = void 0),
@@ -928,7 +924,7 @@ var Xt = 100,
           this.pos += 8;
       },
       e;
-  }(),
+  })(),
   Yt = {};
 function yt(e, t) {
   t === void 0 && (t = Yt);
@@ -951,7 +947,7 @@ function X(e) {
 }
 var Zt = 16,
   te = 16,
-  ee = function () {
+  ee = (function () {
     function e(t, n) {
       t === void 0 && (t = Zt),
         n === void 0 && (n = te),
@@ -989,7 +985,7 @@ var Zt = 16,
         return this.store(s, o), o;
       },
       e;
-  }(),
+  })(),
   ne = function (e, t, n, r) {
     function i(o) {
       return o instanceof n ? o : new n(function (s) {
@@ -1183,17 +1179,17 @@ var Zt = 16,
   I = -1,
   Z = new DataView(new ArrayBuffer(0)),
   oe = new Uint8Array(Z.buffer),
-  Q = function () {
+  Q = (function () {
     try {
       Z.getInt8(0);
     } catch (e) {
       return e.constructor;
     }
     throw new Error("never reached");
-  }(),
+  })(),
   ht = new Q("Insufficient data"),
   se = new ee(),
-  ce = function () {
+  ce = (function () {
     function e(t, n, r, i, o, s, c, u) {
       t === void 0 && (t = dt.defaultCodec),
         n === void 0 && (n = void 0),
@@ -1657,7 +1653,7 @@ var Zt = 16,
         return this.pos += 8, t;
       },
       e;
-  }(),
+  })(),
   ae = {};
 function wt(e, t) {
   t === void 0 && (t = ae);
