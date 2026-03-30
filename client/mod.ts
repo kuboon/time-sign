@@ -1,4 +1,4 @@
-import { instantiate, encaps, decaps } from "../lib/rs_lib.generated.js";
+import { decaps, encaps, instantiate } from "../lib/rs_lib.generated.js";
 import { decode } from "https://deno.land/std@0.176.0/encoding/base64.ts";
 import * as msgpack from "https://esm.sh/@msgpack/msgpack@2.8.0";
 await instantiate();
@@ -21,12 +21,16 @@ export function missingFeature() {
 const subtle = window.crypto?.subtle;
 
 type EncData = {
-  ct: Uint8Array
-  iv: Uint8Array
-  encrypted: Uint8Array
-}
+  ct: Uint8Array;
+  iv: Uint8Array;
+  encrypted: Uint8Array;
+};
 
-export async function encrypt(mpk: Uint8Array, id: string, plain: Uint8Array): Promise<Uint8Array>{
+export async function encrypt(
+  mpk: Uint8Array,
+  id: string,
+  plain: Uint8Array,
+): Promise<Uint8Array> {
   const [ct_, ss_] = await encaps(mpk, id);
   const ct = decode(ct_);
   const ss = decode(ss_);
@@ -35,13 +39,17 @@ export async function encrypt(mpk: Uint8Array, id: string, plain: Uint8Array): P
     ss,
     "AES-CBC",
     true,
-    ["encrypt"]);
+    ["encrypt"],
+  );
   const iv: Uint8Array = crypto.getRandomValues(new Uint8Array(16));
   const encrypted = new Uint8Array(await aesEncrypt(aeskey, iv, plain));
-  return msgpack.encode({ct, iv, encrypted});
+  return msgpack.encode({ ct, iv, encrypted });
 }
 
-export async function decrypt(usk: Uint8Array, enc: Uint8Array): Promise<ArrayBuffer> {
+export async function decrypt(
+  usk: Uint8Array,
+  enc: Uint8Array,
+): Promise<ArrayBuffer> {
   const { ct, iv, encrypted } = msgpack.decode(enc) as EncData;
   const ss = await decaps(usk, ct);
   const aeskey = await subtle.importKey(
@@ -49,7 +57,8 @@ export async function decrypt(usk: Uint8Array, enc: Uint8Array): Promise<ArrayBu
     ss,
     "AES-CBC",
     true,
-    ["decrypt"]);
+    ["decrypt"],
+  );
   return aesDecrypt(aeskey, iv, encrypted);
 }
 

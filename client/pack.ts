@@ -1,7 +1,7 @@
-import * as esbuild from 'https://deno.land/x/esbuild@v0.17.5/mod.js';
+import * as esbuild from "https://deno.land/x/esbuild@v0.17.5/mod.js";
 const entryPoints = [
-  'client/mod.ts'
-]
+  "client/mod.ts",
+];
 
 const bundle = await esbuild.build({
   bundle: true,
@@ -16,9 +16,9 @@ const bundle = await esbuild.build({
   splitting: true,
   target: ["chrome99", "firefox99", "safari15"],
   treeShaking: true,
-  write: true
+  write: true,
 });
 
 // console.log(bundle.outputFiles)
 // console.log(bundle.errors)
-esbuild.stop()
+esbuild.stop();
