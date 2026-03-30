@@ -1,12 +1,11 @@
-import { serve } from "std/http/server.ts";
-import { Hono } from "https://deno.land/x/hono@v3.0.0-rc.9/mod.ts";
-import { cors } from "https://deno.land/x/hono@v3.0.0-rc.9/middleware.ts";
-import { decode } from "std/encoding/base64.ts";
+import { Hono } from "jsr:@hono/hono@^4.12.9";
+import { cors } from "jsr:@hono/hono@^4.12.9/cors";
+import { decodeBase64 } from "jsr:@std/encoding@^1.0.10/base64";
 import { extract_usk, instantiate } from "./lib/rs_lib.generated.js";
 await instantiate();
 
-const pk = decode(await Deno.readTextFile("master.key"));
-const sk = decode(Deno.env.get("IBKEM_SECRET_KEY")!);
+const pk = decodeBase64(await Deno.readTextFile("master.key"));
+const sk = decodeBase64(Deno.env.get("IBKEM_SECRET_KEY")!);
 
 const app = new Hono();
 app.use(
@@ -16,7 +15,7 @@ app.use(
     allowMethods: ["GET"],
   }),
 );
-app.get("/master_pk", (c) => c.body(pk));
+app.get("/master_pk", (c) => c.body(pk.buffer as ArrayBuffer));
 app.get("/at/:at", (c) => {
   const at = c.req.param("at");
   const at_date = Date.parse(at);
@@ -27,8 +26,8 @@ app.get("/at/:at", (c) => {
   if (Date.now() < at_date) {
     return c.text("It is not the time");
   } else {
-    const usk = extract_usk(sk, at);
-    return c.body(usk);
+    const usk: Uint8Array = extract_usk(sk, at);
+    return c.body(usk.buffer as ArrayBuffer);
   }
 });
 app.get("/", (c) => {
@@ -38,4 +37,4 @@ app.get("/", (c) => {
   /at/<date> to get the secret key for the given date
   `);
 });
-serve(app.fetch);
+Deno.serve({ port: 8000 }, app.fetch);

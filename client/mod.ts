@@ -18,7 +18,7 @@ export function missingFeature() {
   if (!crypto.getRandomValues) return "crypto.getRandomValues";
   return null;
 }
-const subtle = window.crypto?.subtle;
+const subtle = globalThis.crypto?.subtle;
 
 type EncData = {
   ct: Uint8Array;
