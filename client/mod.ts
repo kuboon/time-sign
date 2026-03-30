@@ -1,5 +1,5 @@
 import { decaps, encaps, instantiate } from "../lib/rs_lib.generated.js";
-import { decode } from "https://deno.land/std@0.176.0/encoding/base64.ts";
+import { decodeBase64 } from "jsr:@std/encoding@^1.0.10/base64";
 import * as msgpack from "https://esm.sh/@msgpack/msgpack@2.8.0";
 await instantiate();
 
@@ -32,17 +32,19 @@ export async function encrypt(
   plain: Uint8Array,
 ): Promise<Uint8Array> {
   const [ct_, ss_] = await encaps(mpk, id);
-  const ct = decode(ct_);
-  const ss = decode(ss_);
+  const ct = decodeBase64(ct_);
+  const ss = decodeBase64(ss_);
   const aeskey = await subtle.importKey(
     "raw",
-    ss,
+    ss as BufferSource,
     "AES-CBC",
     true,
     ["encrypt"],
   );
   const iv: Uint8Array = crypto.getRandomValues(new Uint8Array(16));
-  const encrypted = new Uint8Array(await aesEncrypt(aeskey, iv, plain));
+  const encrypted = new Uint8Array(
+    await aesEncrypt(aeskey, iv as BufferSource, plain as BufferSource),
+  );
   return msgpack.encode({ ct, iv, encrypted });
 }
 
@@ -54,15 +56,15 @@ export async function decrypt(
   const ss = await decaps(usk, ct);
   const aeskey = await subtle.importKey(
     "raw",
-    ss,
+    ss as BufferSource,
     "AES-CBC",
     true,
     ["decrypt"],
   );
-  return aesDecrypt(aeskey, iv, encrypted);
+  return aesDecrypt(aeskey, iv as BufferSource, encrypted as BufferSource);
 }
 
-function aesEncrypt(key: CryptoKey, iv: Uint8Array, plain: ArrayBuffer) {
+function aesEncrypt(key: CryptoKey, iv: BufferSource, plain: BufferSource) {
   return subtle.encrypt(
     {
       name: "AES-CBC",
@@ -75,8 +77,8 @@ function aesEncrypt(key: CryptoKey, iv: Uint8Array, plain: ArrayBuffer) {
 
 function aesDecrypt(
   key: CryptoKey,
-  iv: Uint8Array,
-  encrypted: ArrayBuffer,
+  iv: BufferSource,
+  encrypted: BufferSource,
 ) {
   return subtle.decrypt(
     {

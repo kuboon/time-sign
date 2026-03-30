@@ -2,6 +2,7 @@
   "tasks": {
     "wasmbuild": "deno run -A jsr:@deno/wasmbuild@0.21.1/main.ts",
     "genkey": "deno run --allow-read=./lib/rs_lib_bg.wasm --allow-write=master.key generate_key.ts",
-    "server": "deno run --allow-read=./lib/rs_lib_bg.wasm --allow-net=0.0.0.0:8000 server.ts"
+    "server": "deno run --allow-read=./lib/rs_lib_bg.wasm --allow-net=0.0.0.0:8000 server.ts",
+    "build": "deno run -A client/pack.ts"
   }
 }
