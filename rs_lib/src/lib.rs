@@ -10,11 +10,6 @@ trait JsBind: Compress {
   fn to_base64(&self) -> String {
     BASE64_STANDARD_NO_PAD.encode(self.to_bytes().as_ref())
   }
-  fn from_base64(s: &str) -> Self {
-    let vec = BASE64_STANDARD_NO_PAD.decode(s).unwrap();
-    let ct_option = Self::from_bytes(&Self::try_into(vec));
-    ct_option.unwrap()
-  }
   fn to_js(&self) -> Uint8Array {
     Uint8Array::from(self.to_bytes().as_ref())
   }
