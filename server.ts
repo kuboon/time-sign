@@ -37,4 +37,5 @@ app.get("/", (c) => {
   /at/<date> to get the secret key for the given date
   `);
 });
-Deno.serve({ port: 8000 }, app.fetch);
+
+export default app;
