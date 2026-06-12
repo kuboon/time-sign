@@ -7,8 +7,8 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
-wasm-bindgen = "=0.2.106"
-js-sys = "0.3.83"
+wasm-bindgen = "=0.2.125"
+js-sys = "0.3.102"
 ibe = {version = "0.2.3", features = ["cgwkv"]}
 rand = "0.8.4"
 getrandom = { version = "0.2.7", features = ["js"] }
@@ -19,6 +19,6 @@ irmaseal-curve = { version = "0.1.4", features = [
 ] }
 group = "0.13.0"
 serde = "1.0.140"
-base64 = "0.21.0"
+base64 = "0.22.1"
 subtle = "2.4.1"
-serde-wasm-bindgen = "0.4.3"
+serde-wasm-bindgen = "0.6.5"
